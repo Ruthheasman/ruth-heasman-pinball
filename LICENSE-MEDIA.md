@@ -2,7 +2,8 @@
 
 **The songs and the artwork in this repository are not open source.**
 
-Copyright © Ruth Heasman. All rights reserved.
+Recordings and artwork copyright © Ruth Heasman. Lyrics copyright © their
+credited authors. All rights reserved.
 
 This covers every file in `music/`, `art/` and `thumbs/`:
 
@@ -17,8 +18,9 @@ This covers every file in `music/`, `art/` and `thumbs/`:
 | Eternal Ones | Eternal Ones | `music/eternal.mp3` |
 | Young, Reckless and Free | Young, Reckless and Free | `music/young.mp3` |
 
-All songs are written, recorded and owned by Ruth Heasman and are commercially
-released through DistroKid. The Apache License 2.0 that covers the source code
+The eight tracks are published recordings by Ruth Heasman, commercially released
+through DistroKid, taken from the albums *The War for Freedom* (lyrics by
+Dr C S Wright) and *Moonlight Dissonance* (lyrics by Ruth Heasman). The Apache License 2.0 that covers the source code
 (see `LICENSE`) does **not** apply to them.
 
 ## What you may do

@@ -1,5 +1,7 @@
 # Ruth Heasman Pinball
 
+A 3D pinball game with 8 tables and 8 published and copyright music tracks from The War for Freedom (lyrics by Dr C S Wright) and Moonlight Dissonance (lyrics by Ruth Heasman).
+
 A pinball jukebox. Eight playable 3D tables, each built around one of Ruth
 Heasman's songs: the song's artwork is the playfield, and the song plays while
 you play.
@@ -107,7 +109,8 @@ each feature fired and whether any ball came to rest where it should not.
 
 **Code:** Apache License 2.0. See `LICENSE` and `NOTICE`.
 
-**Songs and artwork:** copyright © Ruth Heasman, all rights reserved. They are
+**Songs and artwork:** published and copyright, all rights reserved (recordings
+and artwork © Ruth Heasman; lyrics © their credited authors). They are
 included so the game can be played, and may only be used as part of this game.
 They are not covered by the Apache licence. See `LICENSE-MEDIA.md`.
 
@@ -117,5 +120,7 @@ each with its licence in `vendor/`.
 
 ## Credits
 
-Game design, songs and artwork by [Ruth Heasman](https://ruthheasman.com).
+Game design, music and artwork by [Ruth Heasman](https://ruthheasman.com).
+The eight tracks are taken from the albums *The War for Freedom* (lyrics by
+Dr C S Wright) and *Moonlight Dissonance* (lyrics by Ruth Heasman).
 Built with Claude.

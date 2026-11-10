@@ -5,7 +5,9 @@ This product includes software developed by Ruth Heasman.
 
 The Apache License in LICENSE covers the source code only.
 The music in music/ and the artwork in art/ and thumbs/ are NOT covered by it.
-They are copyright Ruth Heasman, all rights reserved. See LICENSE-MEDIA.md.
+They are published, copyright works, all rights reserved: recordings and artwork
+copyright Ruth Heasman; lyrics copyright their credited authors (The War for
+Freedom: Dr C S Wright; Moonlight Dissonance: Ruth Heasman). See LICENSE-MEDIA.md.
 
 Third-party components keep their own licences:
   three.js (vendor/three) - MIT License, copyright three.js authors
