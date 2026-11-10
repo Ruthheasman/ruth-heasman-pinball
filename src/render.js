@@ -281,7 +281,7 @@
       const aspect = w / h; camera.aspect = aspect; camera.updateProjectionMatrix();
       const wide = aspect > 0.95, el = (wide ? 40 : 60) * Math.PI / 180;
       const pts = [];
-      for (const x of [-10.7, 10.7]) { pts.push(new THREE.Vector3(x, 0, 21.4), new THREE.Vector3(x, sideH, -21.9), new THREE.Vector3(x, sideH, 21)); if (wide) pts.push(new THREE.Vector3(x, headY + bgH + 0.5, -22.6)); else pts.push(new THREE.Vector3(x, headY + bgH * 0.42, -22.6)); }
+      for (const x of [-10.7, 10.7]) { pts.push(new THREE.Vector3(x, 0, 21.4), new THREE.Vector3(x, sideH, -21.9), new THREE.Vector3(x, sideH, 21), new THREE.Vector3(x, headY + bgH + 0.5, -22.6)); }
       const top = 1 - 2 * topPx / h, v = new THREE.Vector3();
       const ok = (tz, d) => {
         camera.position.set(0, Math.sin(el) * d, tz + Math.cos(el) * d); camera.lookAt(0, wide ? 5 : 1.5, tz); camera.updateMatrixWorld(); camera.matrixWorldInverse.copy(camera.matrixWorld).invert();

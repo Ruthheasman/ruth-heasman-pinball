@@ -191,8 +191,17 @@
         '\nball0 ' + (b ? b.x.toFixed(2) + ', ' + b.y.toFixed(2) + ' L' + b.layer : '-') + '\nquality ' + i.stage + '  bloom ' + i.bloom + '  dpr ' + i.pr + '\nbuild ' + BUILD;
     }
   }
-  function sizeNow() { if (render) render.resize(app.clientWidth, app.clientHeight, hud.offsetHeight); }
-  if (window.ResizeObserver) new ResizeObserver(sizeNow).observe(app); else window.addEventListener('resize', sizeNow);
+  function sizeNow() {
+    const top = hud.offsetHeight;
+    app.style.setProperty('--hud-height', top + 'px');
+    app.style.setProperty('--toast-top', (top + 10) + 'px');
+    if (render) render.resize(app.clientWidth, Math.max(1, app.clientHeight - top), 0);
+  }
+  if (window.ResizeObserver) {
+    const observer = new ResizeObserver(sizeNow);
+    observer.observe(app); observer.observe(hud);
+  } else window.addEventListener('resize', sizeNow);
+  sizeNow();
 
   // ---- boot
   select(idx);

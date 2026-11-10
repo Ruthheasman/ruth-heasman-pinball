@@ -59,6 +59,6 @@
     carved: { display: '"Cinzel", "Times New Roman", serif', label: '"Cinzel", "Times New Roman", serif', weight: '700 ', scale: 0.74, apron: '700 52px' }
   };
   for (const t of T) t.type = TYPE[t.font] || TYPE.fell;
-  for (const t of T) { t.art = 'art/' + t.id + '.jpg'; t.thumb = 'thumbs/' + t.id + '.jpg'; t.track = 'music/' + t.id + '.mp3'; if (!t.layout.letters) t.layout.letters = t.w.letters; if (!t.w.set) t.w.set = t.w.letters.split('').join('-'); }
+  for (const t of T) { t.art = 'art/' + t.id + '.webp'; t.thumb = 'thumbs/' + t.id + '.webp'; t.track = 'music/' + t.id + '.mp3'; if (!t.layout.letters) t.layout.letters = t.w.letters; if (!t.w.set) t.w.set = t.w.letters.split('').join('-'); }
   (typeof window !== 'undefined' ? window : globalThis).WHThemes = T;
 })();
