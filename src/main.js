@@ -19,7 +19,17 @@
     try { window.dispatchEvent(new CustomEvent('pinball', { detail })); if (window.parent && window.parent !== window) window.parent.postMessage(detail, '*'); } catch (e) { /* host not listening */ }
   }
   let theme = THEMES[idx], builtId = null, game = null, render = null, canvas = $('gl');
-  let paused = false, time = 0, toastT = 0, bbMsg = '', ready = false, muted = false, looping = false;
+  let paused = false, time = 0, toastT = 0, bbMsg = '', ready = false, looping = false;
+  let musicEnabled = store.get('pinball-music') !== 'off', effectsEnabled = store.get('pinball-effects') !== 'off';
+  function syncAudioControls() {
+    for (const [id, enabled] of [['musicToggle', musicEnabled], ['effectsToggle', effectsEnabled]]) {
+      $(id).setAttribute('aria-pressed', String(enabled));
+      $(id).querySelector('.audio-state').textContent = enabled ? 'on' : 'off';
+    }
+    music.muted = !musicEnabled;
+    window.WHAudio.setMuted(!effectsEnabled);
+  }
+  syncAudioControls();
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const hiKey = () => 'pinball-hi-' + theme.id;
   const hi = () => parseInt(store.get(hiKey()) || '0', 10) || 0;
@@ -58,8 +68,9 @@
     });
   }
   function playMusic() {
+    if (!musicEnabled) { music.pause(); return; }
     if (music.dataset.id !== theme.id) { music.dataset.id = theme.id; music.src = theme.track; }
-    music.muted = muted; music.volume = 0.7; const p = music.play(); if (p && p.catch) p.catch(() => { /* no track for this table yet */ });
+    music.muted = false; music.volume = 0.7; const p = music.play(); if (p && p.catch) p.catch(() => { /* browser may block playback */ });
   }
   function start() {
     if (!ready) return;
@@ -130,7 +141,13 @@
   // ---- input
   const playing = () => game && game.state === 'playing';
   const KEYS = { ArrowLeft: 'L', KeyZ: 'L', KeyA: 'L', ShiftLeft: 'L', ArrowRight: 'R', Slash: 'R', KeyL: 'R', KeyM: 'R', ShiftRight: 'R' };
+  const audioActivation = e => e.target.closest('.audio-toggle') && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ' || e.key === 'Enter');
   window.addEventListener('keydown', e => {
+    if (audioActivation(e)) {
+      e.preventDefault();
+      if (!e.repeat) e.target.closest('.audio-toggle').click();
+      return;
+    }
     const inMenu = !startEl.hidden, launchKey = e.code === 'Space' || e.code === 'ArrowDown' || e.code === 'Enter';
     if (e.repeat) { if (KEYS[e.code] || launchKey) e.preventDefault(); return; }
     if (inMenu) {
@@ -146,6 +163,7 @@
     else if (e.code === 'Escape') menu();
   });
   window.addEventListener('keyup', e => {
+    if (audioActivation(e)) { e.preventDefault(); return; }
     if (!game) return;
     if (KEYS[e.code]) game.setFlipper(KEYS[e.code], false);
     else if (e.code === 'Space' || e.code === 'ArrowDown' || e.code === 'Enter') game.plungeRelease();
@@ -153,8 +171,9 @@
   const touches = new Map();
   const refreshTouch = () => { let L = false, Rr = false; for (const s of touches.values()) { if (s === 'L') L = true; else Rr = true; } if (game) { game.setFlipper('L', L); game.setFlipper('R', Rr); } };
   app.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
     if (paused) { paused = false; toastT = 0.01; playMusic(); }
-    if (e.target.closest('button') || !playing()) return;
+    if (!playing()) return;
     window.WHAudio.unlock(); e.preventDefault();
     touches.set(e.pointerId, e.clientX < app.clientWidth / 2 ? 'L' : 'R'); refreshTouch();
   });
@@ -164,7 +183,17 @@
   launchBtn.addEventListener('pointerdown', e => { e.preventDefault(); window.WHAudio.unlock(); launchBtn.classList.add('down'); if (game) game.plungeStart(); try { launchBtn.setPointerCapture(e.pointerId); } catch (err) { /* fine */ } });
   const lUp = () => { launchBtn.classList.remove('down'); if (game) game.plungeRelease(); };
   launchBtn.addEventListener('pointerup', lUp); launchBtn.addEventListener('pointercancel', lUp);
-  $('mute').addEventListener('click', () => { muted = !muted; window.WHAudio.setMuted(muted); music.muted = muted; $('mute').textContent = muted ? '♪ off' : '♪ on'; $('mute').setAttribute('aria-pressed', String(muted)); });
+  $('musicToggle').addEventListener('click', () => {
+    musicEnabled = !musicEnabled; store.set('pinball-music', musicEnabled ? 'on' : 'off');
+    syncAudioControls();
+    if (!musicEnabled) music.pause();
+    else if (startEl.hidden && !paused) playMusic();
+  });
+  $('effectsToggle').addEventListener('click', () => {
+    effectsEnabled = !effectsEnabled; store.set('pinball-effects', effectsEnabled ? 'on' : 'off');
+    syncAudioControls();
+    if (effectsEnabled) window.WHAudio.unlock();
+  });
   document.addEventListener('visibilitychange', () => { if (document.hidden && playing() && !paused) { paused = true; music.pause(); toast('Paused. Press P or tap.', 9999); } });
 
   // ---- loop

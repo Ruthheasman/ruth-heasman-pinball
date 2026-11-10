@@ -42,6 +42,11 @@ the artwork from being drawn into the 3D scene on `file://` pages.)
 | Pause | `P` | Leave the tab |
 | Back to the table list | `Esc` | The Tables button |
 
+Music and pinball effects have separate on/off pill controls in the score bar.
+Both default to on; choices are saved independently in this browser. Music
+pauses when switched off and resumes from the same position when enabled during
+play. Effects can stay on while music is off, or vice versa.
+
 ## Hosting and embedding
 
 The game is one static page, so it can be dropped into an `<iframe>`.

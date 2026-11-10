@@ -23,6 +23,11 @@ body { background: var(--ink); color: var(--bone); font-family: var(--label); fo
 button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
 .icon { white-space: nowrap; pointer-events: auto; background: linear-gradient(180deg, rgba(143,182,201,0.14), rgba(10,21,32,0.94)); border: 1px solid rgba(233,226,200,0.25); color: var(--bone); border-radius: 999px; padding: 9px 17px; min-height: 44px; font-size: 0.9rem; letter-spacing: 0.06em; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.25); }
 .icon[aria-pressed="true"] { border-color: var(--amber); background-color: var(--deep); }
+.audio-controls { display: flex; gap: 8px; pointer-events: auto; }
+.audio-toggle { display: inline-flex; align-items: center; gap: 7px; }
+.audio-state { font-family: var(--digit); font-size: 0.68em; letter-spacing: 0.02em; color: var(--teal); }
+.audio-toggle[aria-pressed="false"] { border-color: rgba(233,226,200,0.2); }
+.audio-toggle[aria-pressed="false"] .audio-state { color: var(--mist); }
 button:focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; }
 button:active:not(:disabled) { transform: translateY(1px) scale(0.97); }
 #toast { position: absolute; left: 50%; top: var(--toast-top, 84px); transform: translateX(-50%); max-width: min(92%, 34rem); text-align: center; text-wrap: balance;
@@ -76,6 +81,7 @@ h1.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path
   #score { width: 100%; font-size: 1.65rem; }
   .stats { width: 100%; margin-left: 0; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 0.85rem; }
   .stats b { margin-left: 3px; }
+  .audio-controls { margin-left: auto; }
   .icon { min-height: 44px; padding: 5px 8px; box-sizing: border-box; }
   .jukebox { padding-top: max(10px, env(safe-area-inset-top, 0px)); padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
   .poster { width: 100%; aspect-ratio: auto; }
@@ -108,3 +114,17 @@ h1.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path
 #start .keys { font-size: clamp(0.85rem, 2.8vw, 0.95rem); line-height: 1.35; }
 #start .hi { font-size: 0.76rem; letter-spacing: 0.08em; }
 #start .made { font-size: 0.85rem; letter-spacing: 0.04em; }
+/* Give the chooser room to breathe on monitors; retain compact phone/landscape sizing. */
+@media (min-width: 1000px) and (min-height: 650px) {
+  #start .jukebox {
+    gap: 18px;
+    padding-top: 18px;
+    padding-bottom: clamp(32px, 5dvh, 72px);
+  }
+  #start .strip { gap: 12px; padding: 10px 10px 12px; }
+  #start .thumb { width: clamp(64px, 4.5vw, 96px); border-radius: 14px; }
+  #start .panel { gap: 12px; padding-bottom: 28px; }
+  #start .keys { font-size: 1.05rem; line-height: 1.4; }
+  #start .hi { font-size: 0.9rem; }
+  #start .made { font-size: 1rem; }
+}
