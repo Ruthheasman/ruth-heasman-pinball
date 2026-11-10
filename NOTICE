@@ -1,0 +1,13 @@
+Ruth Heasman Pinball
+Copyright 2026 Ruth Heasman
+
+This product includes software developed by Ruth Heasman.
+
+The Apache License in LICENSE covers the source code only.
+The music in music/ and the artwork in art/ and thumbs/ are NOT covered by it.
+They are copyright Ruth Heasman, all rights reserved. See LICENSE-MEDIA.md.
+
+Third-party components keep their own licences:
+  three.js (vendor/three) - MIT License, copyright three.js authors
+  Griffy, IM Fell English SC, Orbitron, Cinzel (vendor/fonts) - SIL Open Font License 1.1
+  Special Elite (vendor/fonts) - Apache License 2.0, copyright Astigmatic

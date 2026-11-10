@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruth Heasman Pinball</title>
+<meta name="description" content="A pinball jukebox: eight 3D tables, each built around a Ruth Heasman song.">
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="gl" aria-label="Existential Dread pinball table"></canvas>
+  <header id="hud">
+    <div id="score" aria-label="Score">0</div>
+    <div class="stats">
+      <span>Ball<b id="ball">1/3</b></span>
+      <span id="dreadWrap"><span id="meterName">Dread</span><b id="dread">0/12</b></span>
+      <span>Bonus<b id="mult">×1</b></span>
+      <button class="icon" id="tables" type="button">Tables</button>
+      <button class="icon" id="mute" type="button" aria-pressed="false" aria-label="Sound">♪ on</button>
+    </div>
+  </header>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <button id="launch" type="button" aria-label="Hold to launch" hidden><span>Hold to launch</span></button>
+  <section id="start" class="overlay">
+    <div class="jukebox">
+      <h1 class="sr">Ruth Heasman Pinball</h1>
+      <div class="poster" id="poster" role="img">
+        <button class="nav" id="prev" type="button" aria-label="Previous table">‹</button>
+        <button class="nav" id="next" type="button" aria-label="Next table">›</button>
+        <div class="panel">
+          <p class="name" id="tableName"></p>
+          <button class="play" id="play" type="button" disabled>Loading</button>
+          <p class="keys" id="keys">Flippers <kbd>←</kbd> <kbd>→</kbd> or <kbd>Z</kbd> <kbd>/</kbd>. Hold <kbd>Space</kbd> to launch. On a touchscreen, tap the left or right half and hold the eye.</p>
+          <p class="hi"></p>
+        </div>
+      </div>
+      <div class="strip" id="strip" role="group" aria-label="Choose a table"></div>
+    </div>
+  </section>
+  <section id="over" class="overlay" hidden>
+    <div class="card">
+      <h2 id="overTitle">Game over</h2>
+      <p class="final" id="final">0</p>
+      <p class="hi"></p>
+      <button class="play" id="again" type="button">Play again</button>
+      <button class="icon" id="change" type="button">Change table</button>
+    </div>
+  </section>
+  <audio id="music" loop preload="none"></audio>
+  <pre id="canary" hidden></pre>
+</div>
+<script src="vendor/three/three.min.js"></script>
+<script src="vendor/three/CopyShader.js"></script>
+<script src="vendor/three/LuminosityHighPassShader.js"></script>
+<script src="vendor/three/GammaCorrectionShader.js"></script>
+<script src="vendor/three/EffectComposer.js"></script>
+<script src="vendor/three/RenderPass.js"></script>
+<script src="vendor/three/ShaderPass.js"></script>
+<script src="vendor/three/MaskPass.js"></script>
+<script src="vendor/three/UnrealBloomPass.js"></script>
+<script src="src/physics.js"></script>
+<script src="src/themes.js"></script>
+<script src="src/art.js"></script>
+<script src="src/render.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>

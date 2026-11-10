@@ -1,0 +1,7 @@
+/* Self-hosted fonts. Special Elite is Apache 2.0; the rest are SIL Open Font License 1.1. See the LICENSE files in this folder. */
+@font-face { font-family: "Griffy"; font-style: normal; font-weight: 400; font-display: swap; src: url(griffy-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "IM Fell English SC"; font-style: normal; font-weight: 400; font-display: swap; src: url(im-fell-english-sc-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 600; font-display: swap; src: url(orbitron-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 700; font-display: swap; src: url(orbitron-latin-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Special Elite"; font-style: normal; font-weight: 400; font-display: swap; src: url(special-elite-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 700; font-display: swap; src: url(cinzel-latin-700-normal.woff2) format("woff2"); }
