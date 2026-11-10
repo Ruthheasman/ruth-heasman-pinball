@@ -31,7 +31,6 @@
   function select(i) {
     idx = (i + THEMES.length) % THEMES.length; theme = THEMES[idx]; store.set('pinball-table', theme.id);
     posterEl.style.backgroundImage = 'url(' + theme.art + ')'; posterEl.setAttribute('aria-label', theme.title);
-    $('tableName').textContent = theme.title;
     for (const b of stripEl.children) b.setAttribute('aria-pressed', String(b.dataset.id === theme.id));
     const cur = stripEl.children[idx]; if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest', inline: 'center' });
     app.style.setProperty('--display', theme.type.display); app.style.setProperty('--dw', theme.type.weight ? '700' : '400'); app.dataset.type = theme.font;
