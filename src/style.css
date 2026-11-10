@@ -114,3 +114,17 @@ h1.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path
 #start .keys { font-size: clamp(0.85rem, 2.8vw, 0.95rem); line-height: 1.35; }
 #start .hi { font-size: 0.76rem; letter-spacing: 0.08em; }
 #start .made { font-size: 0.85rem; letter-spacing: 0.04em; }
+/* Give the chooser room to breathe on monitors; retain compact phone/landscape sizing. */
+@media (min-width: 1000px) and (min-height: 650px) {
+  #start .jukebox {
+    gap: 18px;
+    padding-top: 18px;
+    padding-bottom: clamp(32px, 5dvh, 72px);
+  }
+  #start .strip { gap: 12px; padding: 10px 10px 12px; }
+  #start .thumb { width: clamp(64px, 4.5vw, 96px); border-radius: 14px; }
+  #start .panel { gap: 12px; padding-bottom: 28px; }
+  #start .keys { font-size: 1.05rem; line-height: 1.4; }
+  #start .hi { font-size: 0.9rem; }
+  #start .made { font-size: 1rem; }
+}
