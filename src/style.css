@@ -100,3 +100,11 @@ h1.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path
 .made { margin: 0; font-size: 0.95rem; letter-spacing: 0.06em; }
 .made a { color: var(--bone); text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; pointer-events: auto; }
 .made a:hover, .made a:focus-visible { color: var(--amber); }
+/* Compact chooser typography only; gameplay and game-over text stay unchanged. */
+#start .panel { gap: 8px; padding-bottom: 16px; }
+#app #start .play { font-size: clamp(1.25rem, 5vw, 1.85rem); }
+#app[data-type="tech"] #start .play { font-size: clamp(0.95rem, 3.6vw, 1.3rem); }
+#app:is([data-type="type"], [data-type="carved"]) #start .play { font-size: clamp(1.05rem, 4.2vw, 1.5rem); }
+#start .keys { font-size: clamp(0.85rem, 2.8vw, 0.95rem); line-height: 1.35; }
+#start .hi { font-size: 0.76rem; letter-spacing: 0.08em; }
+#start .made { font-size: 0.85rem; letter-spacing: 0.04em; }
