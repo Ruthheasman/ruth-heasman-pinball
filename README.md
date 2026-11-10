@@ -102,6 +102,13 @@ To add a table, add an entry to `src/themes.js` with its own artwork, palette,
 words and `layout`, and put a 1024×1536 image in `art/`, a 160×240 thumbnail in
 `thumbs/` and an MP3 in `music/`, each named after the table's `id`.
 
+Keep the original JPEG artwork and thumbnails as source files. The game serves
+WebP copies at the same dimensions to reduce downloads. After adding or updating
+JPEGs, run `bash scripts/optimise-images.sh` with ImageMagick (WebP support)
+installed, and commit the generated `.webp` files. This is a development-only
+step; hosting still needs no build tools. The media licence also covers these
+optimised copies.
+
 `node test/simulate.js` runs 15 bot-played games per table and prints how often
 each feature fired and whether any ball came to rest where it should not.
 
