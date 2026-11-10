@@ -18,7 +18,10 @@
       <span id="dreadWrap"><span id="meterName">Dread</span><b id="dread">0/12</b></span>
       <span>Bonus<b id="mult">×1</b></span>
       <button class="icon" id="tables" type="button">Tables</button>
-      <button class="icon" id="mute" type="button" aria-pressed="false" aria-label="Sound">♪ on</button>
+      <div class="audio-controls" role="group" aria-label="Audio settings">
+        <button class="icon audio-toggle" id="musicToggle" type="button" aria-pressed="true" aria-label="Music">Music <span class="audio-state">on</span></button>
+        <button class="icon audio-toggle" id="effectsToggle" type="button" aria-pressed="true" aria-label="Effects">Effects <span class="audio-state">on</span></button>
+      </div>
     </div>
   </header>
   <div id="toast" role="status" aria-live="polite"></div>

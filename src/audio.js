@@ -5,7 +5,7 @@
   function ensure() {
     if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
     const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
-    ctx = new AC(); master = ctx.createGain(); master.gain.value = 0.5;
+    ctx = new AC(); master = ctx.createGain(); master.gain.value = muted ? 0 : 0.5;
     const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
     noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.5, ctx.sampleRate);
     const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -66,6 +66,9 @@
       if (e.type === 'knock') { const n = performance.now(); if (n - lastKnock < 40) return; lastKnock = n; }
       try { S[e.type](e); } catch (err) { /* sound is optional */ }
     },
-    setMuted(m) { muted = m; }, isMuted: () => muted
+    setMuted(m) {
+      muted = m;
+      if (master) master.gain.setValueAtTime(muted ? 0 : 0.5, ctx.currentTime);
+    }, isMuted: () => muted
   };
 })();
