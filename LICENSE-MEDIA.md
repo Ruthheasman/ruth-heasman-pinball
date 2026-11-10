@@ -48,5 +48,5 @@ If you fork the code to make your own game, replace the contents of `music/`,
 
 ## Permission requests
 
-Contact Ruth Heasman via https://github.com/Ruthheasman or
-https://ruthheasman.com.
+Contact Ruth Heasman at Ruth Designs Digital, https://ruthdesignsdigital.com,
+or via https://github.com/Ruthheasman.

@@ -120,6 +120,8 @@ each with its licence in `vendor/`.
 
 ## Credits
 
+Made by [Ruth Designs Digital](https://ruthdesignsdigital.com).
+
 Game design, music and artwork by [Ruth Heasman](https://ruthheasman.com).
 The eight tracks are taken from the albums *The War for Freedom* (lyrics by
 Dr C S Wright) and *Moonlight Dissonance* (lyrics by Ruth Heasman).

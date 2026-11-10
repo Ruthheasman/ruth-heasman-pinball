@@ -78,3 +78,6 @@ h1.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path
 #app[data-type="carved"] :is(#toast, .name, #over h2) { font-size: clamp(1.05rem, 3.9vw, 1.6rem); letter-spacing: 0.04em; }
 #app[data-type="carved"] .play { font-size: clamp(1.2rem, 4.8vw, 1.75rem); letter-spacing: 0.06em; }
 #app[data-type="carved"] #launch span { font-size: 0.95rem; }
+.made { margin: 0; font-size: 0.95rem; letter-spacing: 0.06em; }
+.made a { color: var(--bone); text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; pointer-events: auto; }
+.made a:hover, .made a:focus-visible { color: var(--amber); }
