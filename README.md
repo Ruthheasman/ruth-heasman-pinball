@@ -21,7 +21,6 @@ install.
 | Young, Reckless and Free | `young` | slow | An S-bend lane to the castle, three flying bats, and a kickback |
 
 Every table has two levels, a ramp, drop targets, a lock and a multiball.
-Computer Says No has no song yet.
 
 ## Play it
 

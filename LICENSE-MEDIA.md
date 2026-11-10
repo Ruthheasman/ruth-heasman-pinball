@@ -11,6 +11,7 @@ This covers every file in `music/`, `art/` and `thumbs/`:
 | Existential Dread | Existential Dread | `music/dread.mp3` |
 | The War for Freedom | The War for Freedom | `music/war.mp3` |
 | Moonlight Dissonance | Moonlight Dissonance | `music/moonlight.mp3` |
+| Computer Says No | Computer Says No | `music/computer.mp3` |
 | Paper Dreams | Paper Dreams | `music/paper.mp3` |
 | Daughter of the Sky | Daughter of the Sky | `music/daughter.mp3` |
 | Eternal Ones | Eternal Ones | `music/eternal.mp3` |
