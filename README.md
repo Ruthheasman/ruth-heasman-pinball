@@ -86,6 +86,31 @@ window.addEventListener('message', e => {
 Scores are computed in the browser, so a player can forge them. Do not pay out
 on these events alone if the amounts matter.
 
+## Minting it as an HTML ordinal
+
+`ordinal/build.py` packs the whole game into one self-contained HTML file: code,
+three.js, fonts, artwork and music are all inlined, and the file makes no
+network requests. That is the form an HTML ordinal needs.
+
+```
+python3 ordinal/build.py --tables dread     # one table, about 9 MB
+python3 ordinal/build.py --kbps 96          # all eight, music re-encoded, about 42 MB
+python3 ordinal/build.py                    # all eight, full-quality music, about 79 MB
+```
+
+Files are written to `ordinal/dist/`. The songs and artwork inside them stay
+copyright; see `LICENSE-MEDIA.md`.
+
+### Inside Treechat
+
+When the ordinal is shown on [Treechat](https://treechat.com/treechat-ordinal),
+`src/treechat.js` asks Treechat who created the ordinal and shows a "Tip the
+artist" row on the start and game-over screens. A tip is one payment to the
+creator's address (or the current owner's, if the creator is unknown), requested
+through the viewer's Treechat wallet, which shows its own confirmation.
+
+Outside Treechat the tip row never appears and the game is unchanged.
+
 ## How it is put together
 
 ```
@@ -96,10 +121,12 @@ src/art.js          playfield, backglass and target textures, drawn to canvas
 src/render.js       the 3D cabinet (three.js)
 src/audio.js        synthesised sound effects (Web Audio)
 src/main.js         table select, input, HUD, music and the frame loop
+src/treechat.js     tip-the-artist bridge for when the game is a Treechat ordinal
 src/style.css       page styles
 art/ thumbs/        table artwork (not open source, see below)
 music/              the songs (not open source, see below)
 vendor/             three.js r128 and the fonts, self-hosted
+ordinal/build.py    packs everything into one HTML file for minting
 test/simulate.js    plays simulated games on every table and reports stuck balls
 ```
 

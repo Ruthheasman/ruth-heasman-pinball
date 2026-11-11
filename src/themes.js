@@ -59,6 +59,8 @@
     carved: { display: '"Cinzel", "Times New Roman", serif', label: '"Cinzel", "Times New Roman", serif', weight: '700 ', scale: 0.74, apron: '700 52px' }
   };
   for (const t of T) t.type = TYPE[t.font] || TYPE.fell;
-  for (const t of T) { t.art = 'art/' + t.id + '.webp'; t.thumb = 'thumbs/' + t.id + '.webp'; t.track = 'music/' + t.id + '.mp3'; if (!t.layout.letters) t.layout.letters = t.w.letters; if (!t.w.set) t.w.set = t.w.letters.split('').join('-'); }
-  (typeof window !== 'undefined' ? window : globalThis).WHThemes = T;
+  // a single-file build (see ordinal/build.py) supplies the media inline as WH_ASSETS and may limit the tables with WH_TABLES
+  const G = typeof window !== 'undefined' ? window : globalThis, ASSETS = G.WH_ASSETS || {}, asset = p => ASSETS[p] || p;
+  for (const t of T) { t.art = asset('art/' + t.id + '.webp'); t.thumb = asset('thumbs/' + t.id + '.webp'); t.track = asset('music/' + t.id + '.mp3'); if (!t.layout.letters) t.layout.letters = t.w.letters; if (!t.w.set) t.w.set = t.w.letters.split('').join('-'); }
+  G.WHThemes = Array.isArray(G.WH_TABLES) ? T.filter(t => G.WH_TABLES.indexOf(t.id) >= 0) : T;
 })();

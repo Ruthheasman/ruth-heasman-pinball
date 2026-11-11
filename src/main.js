@@ -232,7 +232,26 @@
   sizeNow();
 
   // ---- boot
+  if (THEMES.length === 1) app.classList.add('solo');
   select(idx);
+  // inside Treechat (minted as an HTML ordinal): offer a tip to the creator through the viewer's wallet
+  if (window.WHTreechat) window.WHTreechat.payee().then(to => {
+    if (!to) return;
+    for (const box of document.querySelectorAll('.tips')) {
+      const label = document.createElement('span'); label.textContent = 'Tip the artist'; box.appendChild(label);
+      const status = document.createElement('span'); status.className = 'tipmsg'; status.setAttribute('role', 'status');
+      for (const sats of [250000, 1000000, 5000000]) {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'icon'; b.textContent = (sats >= 1e6 ? sats / 1e6 + 'M' : sats / 1e3 + 'k') + ' sats';
+        b.addEventListener('click', () => {
+          status.textContent = 'Waiting for your wallet';
+          window.WHTreechat.tip(sats).then(() => { status.textContent = 'Thank you. ' + sats.toLocaleString('en-GB') + ' sats sent.'; })
+            .catch(err => { status.textContent = 'No payment was made. ' + (err && err.message ? err.message : ''); });
+        });
+        box.appendChild(b);
+      }
+      box.appendChild(status); box.hidden = false;
+    }
+  });
   const fonts = (document.fonts && document.fonts.load) ? Promise.all(['40px "Griffy"', '40px "IM Fell English SC"', '700 40px "Orbitron"', '40px "Special Elite"', '700 40px "Cinzel"'].map(f => document.fonts.load(f).catch(() => null))) : Promise.resolve();
   Promise.race([fonts, new Promise(r => setTimeout(r, 2500))]).then(() => {
     if (!window.THREE) { playBtn.textContent = 'No 3D'; $('keys').textContent = 'The 3D library did not load, so the tables cannot start.'; return; }
