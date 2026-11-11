@@ -60,7 +60,7 @@
   window.WHAudio = {
     unlock: ensure,
     play(e) {
-      const AL = { shot: 'ramp', drone: 'standup', disc: 'spinner', denied: 'bankReset', kickback: 'eject', perfect: 'jackpot' };
+      const AL = { nudge: 'land', tiltWarn: 'bankReset', tilt: 'drain', shot: 'ramp', drone: 'standup', disc: 'spinner', denied: 'bankReset', kickback: 'eject', perfect: 'jackpot' };
       if (AL[e.type]) e = Object.assign({}, e, { type: AL[e.type] });
       if (muted || !ctx || !S[e.type]) return;
       if (e.type === 'knock') { const n = performance.now(); if (n - lastKnock < 40) return; lastKnock = n; }

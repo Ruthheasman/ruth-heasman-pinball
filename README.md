@@ -39,8 +39,14 @@ the artwork from being drawn into the 3D scene on `file://` pages.)
 |---|---|---|
 | Flippers | `←` `→` or `Z` `/` | Tap the left or right half of the screen |
 | Launch | Hold and release `Space` | Hold and release the eye |
+| Nudge | `↑` | Turn on "Tilt to nudge" on the start screen, then jolt the phone |
 | Pause | `P` | Leave the tab |
 | Back to the table list | `Esc` | The Tables button |
+
+Nudging shoves every ball in play. Three nudges in quick succession earn a
+warning and a fourth tilts the table: the flippers go dead and that ball's bonus
+is lost. Tilt to nudge reads the phone's motion sensor, is off until the player
+turns it on, and is not offered when the game is embedded in a frame.
 
 Music and pinball effects have separate on/off pill controls in the score bar.
 Both default to on; choices are saved independently in this browser. Music

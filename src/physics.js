@@ -150,6 +150,7 @@
       this.bankTimers = {};
       this.laneLit = { inL: false, inR: false };
       this.gateOpen = 0; this.kickLit = !!this.layout.kickback; this.msgCd = 0; this.seqOk = true;
+      this.tiltMeter = 0; this.tilted = false; this.nudgeCd = 0;
     }
     emit(type, data) { this.events.push(Object.assign({ type }, data || {})); }
     start() {
@@ -178,10 +179,24 @@
     setFlipper(side, on) {
       for (const f of this.t.flippers) {
         if ((side === 'L') === (f.side < 0)) {
-          if (on && !f.pressed && this.state === 'playing') this.emit('flipper', { id: f.id });
-          f.pressed = on && this.state === 'playing';
+          const live = this.state === 'playing' && !this.tilted;
+          if (on && !f.pressed && live) this.emit('flipper', { id: f.id });
+          f.pressed = on && live;
         }
       }
+    }
+    // Nudge the table: every ball in play gets a shove. dx is -1 (left) to 1 (right), dy is 1 for up the table.
+    // Each nudge fills the tilt meter by one and it drains by one every 3 seconds. Three in quick succession
+    // earns a warning; a fourth tilts the table, which kills the flippers and forfeits the bonus for that ball.
+    nudge(dx, dy) {
+      if (this.state !== 'playing' || this.tilted || this.nudgeCd > this.time) return false;
+      this.nudgeCd = this.time + 0.3;
+      for (const b of this.balls) if (!b.held && b.x < 18.2) { b.vx += dx * 7; b.vy += dy * 8; b.still = 0; }
+      this.tiltMeter += 1;
+      this.emit('nudge', { dx, dy });
+      if (this.tiltMeter >= 3.5) { this.tilted = true; for (const f of this.t.flippers) f.pressed = false; this.emit('tilt'); }
+      else if (this.tiltMeter >= 2.5) this.emit('tiltWarn');
+      return true;
     }
     plungeStart() { if (this.state === 'playing' && !this.plunge) this.plunge = { t: 0 }; }
     plungeRelease() {
@@ -209,6 +224,7 @@
     step(dt) {
       this.time += dt;
       if (this.plunge) this.plunge.t += dt;
+      if (this.tiltMeter > 0 && !this.tilted) this.tiltMeter = Math.max(0, this.tiltMeter - dt / 3);
       for (let i = this.pending.length - 1; i >= 0; i--) {
         const p = this.pending[i]; p.t -= dt;
         if (p.t <= 0) { this.pending.splice(i, 1); p.fn(); }
@@ -493,9 +509,10 @@
         if (this.balls.length >= 1) return;
       }
       if (this.balls.length > 0) return;
+      const wasTilted = this.tilted; this.tilted = false; this.tiltMeter = 0;
       if (this.saveTimer > 0) { this.saveTimer = 0; this.serve(true); this.emit('ballsave'); return; }
-      // end of ball
-      const bonus = this.hoursThisBall * 500 * this.mult;
+      // end of ball (a tilted ball earns no bonus)
+      const bonus = wasTilted ? 0 : this.hoursThisBall * 500 * this.mult;
       this.score += bonus;
       this.emit('bonus', { bonus, hours: this.hoursThisBall, mult: this.mult });
       this.hoursThisBall = 0; this.witching = 0; this.savedThisBall = false;

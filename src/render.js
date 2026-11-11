@@ -321,6 +321,8 @@
     function fx(e) {
       if (e.type === 'bumper') { const b = bumpMeshes[e.id]; if (b) b.v = 1; if (!reduceMotion) shake.set((Math.random() - 0.5) * 0.25, 0, (Math.random() - 0.5) * 0.25); }
       else if (e.type === 'sling') { const s = slingPl[e.id]; if (s) s.v = 1; }
+      else if (e.type === 'nudge') { if (!reduceMotion) shake.set(e.dx * 0.55, 0, -e.dy * 0.55); }
+      else if (e.type === 'tilt') flash = 1;
       else if (e.type === 'spinner') spinV = Math.min(60, 8 + e.speed);
       else if (e.type === 'multiball' || e.type === 'witching' || e.type === 'jackpot') flash = 1;
       else if (e.type === 'bank' || e.type === 'lock' || e.type === 'moon') flash = Math.max(flash, 0.5);

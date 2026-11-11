@@ -75,6 +75,7 @@
   function start() {
     if (!ready) return;
     window.WHAudio.unlock(); playBtn.disabled = true; againBtn.disabled = true;
+    if (tiltOn) askMotion().then(ok => { if (ok) bindMotion(); else { tiltOn = false; syncTilt(); } });
     const go = () => { startEl.hidden = true; overEl.hidden = true; paused = false; playBtn.disabled = false; againBtn.disabled = false; playBtn.textContent = 'Play'; game.start(); playMusic(); if (!looping) { looping = true; requestAnimationFrame(loop); } };
     if (builtId === theme.id) return go();
     playBtn.textContent = 'Loading';
@@ -108,6 +109,8 @@
       case 'moon': toast(w.set + ' · bonus ×' + e.mult); break;
       case 'crypt': toast(e.dice ? 'Rolled ' + e.dice[0] + ' and ' + e.dice[1] + ' · ' + fmt(e.points) : w.saucer + ' ' + fmt(e.points), e.dice ? 2.2 : 1.6); break;
       case 'ballsave': toast('Ball saved'); break;
+      case 'tiltWarn': toast('Careful. One more nudge and the table tilts.', 2); break;
+      case 'tilt': toast('TILT. Flippers are dead and the bonus is lost.', 3.5); break;
       case 'bonus': toast(pick(w.drain) + ' Bonus ' + fmt(e.bonus), 3); tell('ballend', { bonus: e.bonus }); break;
       case 'gameover':
         tell('gameover', { score: e.score, highScore: Math.max(e.score, hi()) });
@@ -140,6 +143,41 @@
 
   // ---- input
   const playing = () => game && game.state === 'playing';
+  // ---- tilt to nudge: on a phone, a sharp jolt of the handset nudges the table (off until the player turns it on)
+  const tiltBtn = $('tiltToggle');
+  const framed = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
+  const canTilt = !framed && 'DeviceMotionEvent' in window && window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  let tiltOn = canTilt && store.get('pinball-tilt') === 'on', motionBound = false, lastJolt = 0, restX = 0, restY = 0;
+  function onMotion(e) {
+    if (!tiltOn || !playing() || paused) return;
+    let ax, ay; const a = e.acceleration;
+    if (a && a.x !== null && a.x !== undefined) { ax = a.x; ay = a.y; }
+    else { const g = e.accelerationIncludingGravity; if (!g || g.x === null || g.x === undefined) return; restX += (g.x - restX) * 0.1; restY += (g.y - restY) * 0.1; ax = g.x - restX; ay = g.y - restY; }
+    const turn = (screen.orientation && screen.orientation.angle) || 0;      // express the jolt in screen axes
+    if (turn === 90) { const t = ax; ax = -ay; ay = t; } else if (turn === 270) { const t = ax; ax = ay; ay = -t; } else if (turn === 180) { ax = -ax; ay = -ay; }
+    const now = performance.now(), JOLT = 7;                                  // m/s², well above a hand tremor
+    if (now - lastJolt < 450) return;
+    if (Math.abs(ax) > JOLT && Math.abs(ax) >= Math.abs(ay)) { lastJolt = now; game.nudge(ax > 0 ? 1 : -1, 0.35); }
+    else if (Math.abs(ay) > JOLT) { lastJolt = now; game.nudge(0, 1); }
+  }
+  function bindMotion() { if (!motionBound) { window.addEventListener('devicemotion', onMotion); motionBound = true; } }
+  // iPhones only hand over motion data after a permission prompt, which must be asked for from a tap
+  function askMotion() {
+    const D = window.DeviceMotionEvent;
+    if (D && typeof D.requestPermission === 'function') return D.requestPermission().then(r => r === 'granted', () => false);
+    return Promise.resolve(true);
+  }
+  function syncTilt() { tiltBtn.setAttribute('aria-pressed', String(tiltOn)); tiltBtn.querySelector('.audio-state').textContent = tiltOn ? 'on' : 'off'; }
+  if (canTilt) {
+    tiltBtn.hidden = false; syncTilt();
+    tiltBtn.addEventListener('click', () => {
+      if (tiltOn) { tiltOn = false; store.set('pinball-tilt', 'off'); syncTilt(); return; }
+      askMotion().then(ok => {
+        tiltOn = ok; store.set('pinball-tilt', ok ? 'on' : 'off'); syncTilt(); if (ok) bindMotion();
+        if (!ok) $('keys').textContent = 'Motion access was refused, so tilt to nudge is off. Allow motion for this site in your browser settings to use it.';
+      });
+    });
+  }
   const KEYS = { ArrowLeft: 'L', KeyZ: 'L', KeyA: 'L', ShiftLeft: 'L', ArrowRight: 'R', Slash: 'R', KeyL: 'R', KeyM: 'R', ShiftRight: 'R' };
   const audioActivation = e => e.target.closest('.audio-toggle') && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ' || e.key === 'Enter');
   window.addEventListener('keydown', e => {
@@ -159,6 +197,7 @@
     else if (launchKey) {
       if (!playing()) { if (!overEl.hidden && !(document.activeElement && document.activeElement.tagName === 'BUTTON')) { e.preventDefault(); start(); } return; }
       e.preventDefault(); game.plungeStart();
+    } else if (e.code === 'ArrowUp') { if (playing() && !paused) { game.nudge(0, 1); e.preventDefault(); }
     } else if (e.code === 'KeyP' && playing()) { paused = !paused; if (paused) { toast('Paused', 9999); music.pause(); } else { toastT = 0.01; playMusic(); } }
     else if (e.code === 'Escape') menu();
   });
