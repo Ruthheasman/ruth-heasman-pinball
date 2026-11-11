@@ -95,8 +95,12 @@ network requests. That is the form an HTML ordinal needs.
 ```
 python3 ordinal/build.py --tables dread     # one table, about 9 MB
 python3 ordinal/build.py --kbps 96          # all eight, music re-encoded, about 42 MB
-python3 ordinal/build.py                    # all eight, full-quality music, about 79 MB
+python3 ordinal/build.py                    # all eight, full-quality music, about 79 MBpython3 ordinal/build.py --each --max-mb 9.5   # one file per table, each under 9.5 MB
 ```
+
+`--max-mb` keeps each file under a size cap by lowering the music bitrate only
+as far as needed. Treechat accepts HTML ordinals up to 10 MB, so the eight
+tables are minted as eight ordinals, one per song.
 
 Files are written to `ordinal/dist/`. The songs and artwork inside them stay
 copyright; see `LICENSE-MEDIA.md`.
