@@ -1,5 +1,7 @@
 # Ruth Heasman Pinball
 
+**[▶ Play the game here](https://ruthheasman.github.io/ruth-heasman-pinball/)**
+
 A 3D pinball game with 8 tables and 8 published and copyright music tracks from The War for Freedom (lyrics by Dr C S Wright) and Moonlight Dissonance (lyrics by Ruth Heasman).
 
 A pinball jukebox. Eight playable 3D tables, each built around one of Ruth
@@ -26,7 +28,9 @@ Every table has two levels, a ramp, drop targets, a lock and a multiball.
 
 ## Play it
 
-Serve the folder with any static web server and open `index.html`:
+Play it in your browser at https://ruthheasman.github.io/ruth-heasman-pinball/
+
+To run your own copy, serve the folder with any static web server and open `index.html`:
 
 ```
 npx serve .
