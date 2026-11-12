@@ -109,6 +109,7 @@
       case 'moon': toast(w.set + ' · bonus ×' + e.mult); break;
       case 'crypt': toast(e.dice ? 'Rolled ' + e.dice[0] + ' and ' + e.dice[1] + ' · ' + fmt(e.points) : w.saucer + ' ' + fmt(e.points), e.dice ? 2.2 : 1.6); break;
       case 'ballsave': toast('Ball saved'); break;
+      case 'nudge': if (toastT <= 0) toast('Nudge', 0.7); break;
       case 'tiltWarn': toast('Careful. One more nudge and the table tilts.', 2); break;
       case 'tilt': toast('TILT. Flippers are dead and the bonus is lost.', 3.5); break;
       case 'bonus': toast(pick(w.drain) + ' Bonus ' + fmt(e.bonus), 3); tell('ballend', { bonus: e.bonus }); break;
@@ -148,14 +149,16 @@
   const framed = (() => { try { return window.parent !== window; } catch (e) { return true; } })();
   const canTilt = !framed && 'DeviceMotionEvent' in window && window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
   let tiltOn = canTilt && store.get('pinball-tilt') === 'on', motionBound = false, lastJolt = 0, restX = 0, restY = 0;
+  let motionSeen = false;
   function onMotion(e) {
+    motionSeen = true;
     if (!tiltOn || !playing() || paused) return;
     let ax, ay; const a = e.acceleration;
     if (a && a.x !== null && a.x !== undefined) { ax = a.x; ay = a.y; }
     else { const g = e.accelerationIncludingGravity; if (!g || g.x === null || g.x === undefined) return; restX += (g.x - restX) * 0.1; restY += (g.y - restY) * 0.1; ax = g.x - restX; ay = g.y - restY; }
     const turn = (screen.orientation && screen.orientation.angle) || 0;      // express the jolt in screen axes
     if (turn === 90) { const t = ax; ax = -ay; ay = t; } else if (turn === 270) { const t = ax; ax = ay; ay = -t; } else if (turn === 180) { ax = -ax; ay = -ay; }
-    const now = performance.now(), JOLT = 7;                                  // m/s², well above a hand tremor
+    const now = performance.now(), JOLT = 4.5;                                // m/s²: a short sharp shove, not a slow lean
     if (now - lastJolt < 450) return;
     if (Math.abs(ax) > JOLT && Math.abs(ax) >= Math.abs(ay)) { lastJolt = now; game.nudge(ax > 0 ? 1 : -1, 0.35); }
     else if (Math.abs(ay) > JOLT) { lastJolt = now; game.nudge(0, 1); }
@@ -174,7 +177,11 @@
       if (tiltOn) { tiltOn = false; store.set('pinball-tilt', 'off'); syncTilt(); return; }
       askMotion().then(ok => {
         tiltOn = ok; store.set('pinball-tilt', ok ? 'on' : 'off'); syncTilt(); if (ok) bindMotion();
-        if (!ok) $('keys').textContent = 'Motion access was refused, so tilt to nudge is off. Allow motion for this site in your browser settings to use it.';
+        if (ok) {
+          $('keys').textContent = 'Shake to nudge is on. During play, give the phone a short sharp shove sideways or forwards. Leaning it slowly does nothing.';
+          setTimeout(() => { if (tiltOn && !motionSeen) $('keys').textContent = 'This browser is not sending any motion data, so shake to nudge cannot work here. Check that motion access is allowed for this site.'; }, 3000);
+        }
+        if (!ok) $('keys').textContent = 'Motion access was refused, so shake to nudge is off. Allow motion for this site in your browser settings to use it.';
       });
     });
   }
