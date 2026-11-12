@@ -225,6 +225,21 @@
   });
   const up = e => { if (touches.delete(e.pointerId)) refreshTouch(); };
   window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+  // Safety net for a flipper that stays up: some phones occasionally never report a finger lifting (a long hold,
+  // a system gesture, a notification). The touch list on every touch event is the truth about which fingers are
+  // down, so whenever it disagrees with what we recorded, rebuild the record from it.
+  const reconcile = e => {
+    const down = Array.from(e.touches || []).filter(t => !(t.target && t.target.closest && t.target.closest('button')));
+    if (down.length === touches.size) return;
+    touches.clear();
+    if (playing()) for (const t of down) touches.set('t' + t.identifier, t.clientX < app.clientWidth / 2 ? 'L' : 'R');
+    refreshTouch();
+  };
+  for (const type of ['touchstart', 'touchend', 'touchcancel']) window.addEventListener(type, reconcile, { passive: true });
+  // and let go of everything when the page loses the player's attention
+  const releaseAll = () => { touches.clear(); if (game) { game.setFlipper('L', false); game.setFlipper('R', false); game.plungeRelease(); } launchBtn.classList.remove('down'); };
+  window.addEventListener('blur', releaseAll); window.addEventListener('pagehide', releaseAll);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) releaseAll(); });
   app.addEventListener('contextmenu', e => e.preventDefault());
   launchBtn.addEventListener('pointerdown', e => { e.preventDefault(); window.WHAudio.unlock(); launchBtn.classList.add('down'); if (game) game.plungeStart(); try { launchBtn.setPointerCapture(e.pointerId); } catch (err) { /* fine */ } });
   const lUp = () => { launchBtn.classList.remove('down'); if (game) game.plungeRelease(); };
@@ -262,7 +277,7 @@
     if (debug) {
       const b = game.balls[0], i = render.info();
       $('canary').textContent = 'fps ' + fps.toFixed(0) + '  ' + ms.toFixed(1) + 'ms\ntable ' + theme.id + '  state ' + game.state + (paused ? ' (paused)' : '') + '  balls ' + game.balls.length +
-        '\nball0 ' + (b ? b.x.toFixed(2) + ', ' + b.y.toFixed(2) + ' L' + b.layer : '-') + '\nquality ' + i.stage + '  bloom ' + i.bloom + '  dpr ' + i.pr + '\nbuild ' + BUILD;
+        '\nball0 ' + (b ? b.x.toFixed(2) + ', ' + b.y.toFixed(2) + ' L' + b.layer : '-') + '\nfingers ' + touches.size + ' [' + Array.from(touches.values()).join('') + ']  flippers ' + game.t.flippers.map(f => f.pressed ? '1' : '0').join('') + '\nquality ' + i.stage + '  bloom ' + i.bloom + '  dpr ' + i.pr + '\nbuild ' + BUILD;
     }
   }
   function sizeNow() {
